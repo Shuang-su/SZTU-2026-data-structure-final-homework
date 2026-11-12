@@ -1,0 +1,1 @@
+T 40 D 2 nodes_per_dc 4 racks_per_dc 2 mach_per_rack_lo 1 mach_per_rack_hi 2 NT 6 NL 10 NI 4 p_noise 8 p_signal 2 W 5 load 0.8 sigma 0.4 bias_lo 0.8 bias_hi 1.6 fail_frac 0.5 precursor_frac 1.0 falsealarm_frac 0.3 blackswan 1 link_events 4 quota_events 5 log_rate 0.06 straggler_p 0.1 audit_rate 2.5 e_max 6 n_max 5 line_lo 8 line_hi 20 seed 286

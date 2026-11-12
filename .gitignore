@@ -1,0 +1,8 @@
+# 本地编译产物与中间结果
+bin/
+w/
+*.rec
+__pycache__/
+.DS_Store
+# 官方评测包（kit/）不随仓库分发，请自行解压 1846_samples.zip 到 kit/
+kit/
