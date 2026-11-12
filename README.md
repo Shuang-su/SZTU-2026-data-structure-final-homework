@@ -38,6 +38,8 @@ python3 run.py bin/submit cases/p1.in -v        # 调用官方 tpj 评测一组
 
 ## 本地测试结果
 
+逐场景数据见 [results/submit_results.csv](results/submit_results.csv)（只含本程序自己的结果）。
+
 基准是 GitHub 上一份 OJ 实得 81 分的公开程序（只当作利润标尺，没有参考其策略和代码）。
 
 | | 场景数 | 利润比中位数 | 10% 分位 | 最低 | 不低于基准的比例 |
