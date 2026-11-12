@@ -1,6 +1,25 @@
-# 本地测试结果（submit.cpp）
+# 本地测试结果
 
-由 `python3 run.py bin/submit cases/*.in -o ...` 调用官方评测程序得到，逐场景数据见 [submit_results.csv](submit_results.csv)。
+都由 `python3 run.py bin/<程序> cases/*.in -o ...` 调用官方评测程序得到。
+
+## v2（`submit.cpp`，尚未在 OJ 提交）
+
+逐场景数据见 [v2_results.csv](v2_results.csv)，同一张表里也列出了 v1（`submit_v1.cpp`）和 v2 不预热版（`submit_nowarm.cpp`）的利润。
+
+| 项目 | 数值 |
+| :--- | ---: |
+| 场景数（165 组随机/练习场景 + 6 组最大规模 + 2 组官方小样例） | 173 |
+| 对账错误或非法指令的场景 | 0 |
+| 165 组随机场景总利润：v1 / v2 不预热 / v2 | 494,269,560 / 514,865,915 / 610,874,225 |
+| 利润 / 上界 U 的中位数（165 组随机场景）：v1 / v2 | 0.359 / 0.457 |
+| 最大 CPU 时间（本机 Apple Silicon，8 个场景并行跑时测得） | 0.546 s |
+| 最大规模 6 组 CPU 时间（同上） | 0.187 - 0.408 s |
+
+CPU 时间是 8 个场景并行时测的，比单独跑偏高；单独回放的数字见 [../docs/v2开发记录.md](../docs/v2开发记录.md) 第 5 节。
+
+## v1（`submit_v1.cpp`，OJ 89 分）
+
+逐场景数据见 [v1_results.csv](v1_results.csv)。
 
 | 项目 | 数值 |
 | :--- | ---: |

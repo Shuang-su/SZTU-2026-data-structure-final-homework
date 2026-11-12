@@ -1,71 +1,75 @@
 #include <bits/stdc++.h>
 #include <unistd.h>
 using namespace std;typedef long long i;
-#define j(b,x) for(int b=0;b<(int)(x);b++)
-char bv[1<<16],aa[1<<22];int bw,bx;int by(){if(bw==bx){bx=read(0,bv,sizeof bv);bw=0;if(bx<=0)return-1;}return bv[bw++];}int ar(){int d=by(),x=0;while(d==' '||d=='\n'||d=='\r')d=by();
-while(d>' ')aa[x++]=d,d=by();aa[x]=0;return x;}i e(){ar();return atoll(aa);}int a5,bz,bA,R,bB,S,ci,cj,ck,cl,cm,l;i aG,aH,D,bC,as,T[8];struct a6{vector<int>h;
-i bD,aI;char N[400];};a6 aJ[30],at[360];int U[30],a7[30];int ah[360],cn[360],co[360],a8[360],a9[360],aK[360];vector<int>ai[360];i cp[360][602];int ba[1000],bb[1000],aj[1000],bc[1000],bE[8],aL=1;
-vector<int>bF[600];i ak[30][30];int ab[200],bG[200];i au[200],bd[200],bH[200],bI[200],bJ[200];double cq[602],cr[602];vector<pair<int,i>>be;int av[400];
-vector<int>bK[120];int cs[20][2],bL;vector<array<int,8>>C;vector<i>aw;struct B{int E,ac,d,I,q,bM,o,al,aM,y,aN,ax,ay,bN,bf,V;int am,ct,aO;double cu,bO,bP;
-vector<int>J,bg;};struct O{int E,ad,ae,bQ,first,x,aP,aQ,cR,aR,aS,aT,cS;double aU;i u;};vector<B>k;vector<O>G;unordered_map<int,int>bh;string af;i cv;int cw[360];
-bool cx(a6&d,int z){if(!d.N[z])return 0;d.h.erase(find(d.h.begin(),d.h.end(),z));d.h.push_back(z);return 1;}void cy(a6&d,int z){d.h.push_back(z);d.N[z]=1;
-d.aI+=av[z];while(d.aI>d.bD){int p=d.h[0];d.aI-=av[p];d.N[p]=0;d.h.erase(d.h.begin());}}i bR[30][600];char aV[30];void cz(){static int h[1024];static char N[600];
-int cA=bA/bz;j(f,R)if(aV[f]){i*m=bR[f];j(b,bA)m[b]=1e18;int o=a7[f],K=0,L=0;if(!bE[o/cA])m[o]=0,h[L++]=o;while(K!=L){int r=h[K++&1023];N[r]=0;for(int q:bF[r]){
-int u=ba[q]^bb[q]^r;if(bc[q]&&!bE[u/cA]&&m[r]+aj[q]<m[u]){m[u]=m[r]+aj[q];if(!N[u])N[u]=1,h[L++&1023]=u;}}}j(v,R)ak[f][v]=m[a7[v]]>9e17?-1:m[a7[v]];aV[f]=0;
-}aL=0;}double cB,cC,bS,bT,bU[602],bV[602],bW[602];double cD(int p){return bW[p];}void cE(){double cT=(cB+bS+100.*1.5)/(cC+bT+100.);j(p,S)bW[p]=(cq[p]+bU[p]+30.*cT)/(cr[p]+bV[p]+30.);
-}void bX(int n){B&a=k[n];int g=a.aN,p=G[a.ac].ad;i F=a.d*T[U[ah[g]]];a8[g]+=a.d;a9[g]+=a.I;cw[g]=l;G[a.ac].aT=1;ai[g].erase(find(ai[g].begin(),ai[g].end(),n));
-bH[p]+=F*(l-a.ax);bI[p]-=F;bJ[p]-=F*a.ax;for(int f=p;f>=0;f=ab[f])bd[f]-=a.d;a.y=0;a.V=l,a.aO=0;}i bY(int f,int v){return f==v?0:ak[f][v]<0?99:ak[f][v];
-}bool cF(B&a,int s,i&az,i&aW,i&bZ){az=aW=bZ=0;int t=a.J.size();for(int b=a.o<0?0:-1;b<t;b++){int o=b<0?a.o:k[a.J[b]].bN;i cG=b<0?a.al:k[a.J[b]].aM;if(o==s)continue;
-i m=ak[s][o];if(m<0)return 0;az=max(az,m+(cG+D-1)/D);aW+=cG*m*as;if(b>=0)bZ=max(bZ,m);}return 1;}void cU(int n,int g){B&a=k[n];int s=ah[g],p=G[a.ac].ad;
-i az,aW,bi,an=0,aX=0;cF(a,s,az,aW,bi);for(int z:bK[a.bM]){if(cx(at[g],z))continue;if(cx(aJ[s],z))aX+=av[z];else an+=av[z],cy(aJ[s],z);cy(at[g],z);}i F=a.d*T[U[s]];
-a.ay=max(az,(an+aG-1)/aG+(aX+aH-1)/aH);a.y=1;a.aN=g;a.ax=l;a8[g]-=a.d;a9[g]-=a.I;ai[g].push_back(n);bH[p]+=cv=aW+an*bC;bI[p]+=F;bJ[p]+=F*l;for(int f=p;
-f>=0;f=ab[f])bd[f]+=a.d;af+="RUN "+to_string(a.E)+" "+to_string(g)+"\n";}i cV(int n){O&c=G[k[n].ac];static i aA[1<<16],aB[1<<16];i F=0;j(b,c.x){B&a=k[c.first+b];
-aA[b]=0;aB[b]=0;if(a.y>1)continue;for(int w:a.J)if(k[w].y<2)aA[b]=max(aA[b],aA[w-c.first]+k[w].q);F=max(F,aA[b]+a.q);}for(int b=c.x-1;b>=0;b--){B&a=k[c.first+b];
-if(a.y>1)continue;aB[b]+=a.q;for(int w:a.J)aB[w-c.first]=max(aB[w-c.first],aB[b]);}return F-aA[n-c.first]-aB[n-c.first];}double aY[1<<17],b0[1<<17],ao[1<<17],b1=3,b2=1,b3=50;
-vector<pair<double,i>>ag[360];int b4[360],b5[360];vector<int>cH[30];double cI(O&c,double aZ){i a0=max(5,(c.ae-c.bQ)/3);if(aZ<=c.ae)return c.u;if(aZ>=c.ae+a0)return 0;
-return c.u*(c.ae+a0-aZ)/a0;}void cW(O&c,double&M,double&a1,double&W){static double P[1<<16],X[1<<16];double aZ=cD(c.ad);i cX=T[U[c.aS]];M=a1=W=0;j(b,c.x){
-B&a=k[c.first+b];P[b]=X[b]=0;if(a.y>1)continue;for(int w:a.J)P[b]=max(P[b],P[w-c.first]+X[w-c.first]);X[b]=a.y?aY[c.first+b]-l:a.q*aZ+1.*b1+a.bO;a1+=a.d*X[b];
-if(!a.y)X[b]+=1.*b2;W+=a.y?a.d*X[b]*T[U[ah[a.aN]]]:a.d*X[b]*cX+b3+a.bP;M=max(M,P[b]+X[b]);ao[c.first+b]=0;}i a0=max(5,(c.ae-c.bQ)/3);for(int b=c.x-1;b>=0;
-b--){int n=c.first+b;B&a=k[n];if(a.y>1)continue;ao[n]+=X[b];for(int w:a.J)ao[w]=max(ao[w],ao[n]);double cJ=P[b]+ao[n],g=(l+cJ-c.ae)/(1.*cJ+1)+1;b0[n]=5.*a.d+c.u*1.0/a0*min(1.0,max(0.0,g));
-}}void cY(O&c){double ap=1e18;j(K,R){double a2=0;j(b,c.x){B&a=k[c.first+b];i F=a.d*T[U[K]],m=a.o<0||a.o==K?0:ak[K][a.o];a2+=F*a.q;if(m<0)a2+=1e9;if(m>0)a2+=a.al*m*as+(m+(a.al+D-1)/D)*(F+5.*a.d);
-}if(a2<ap)ap=a2,c.aS=K;}j(b,c.x){B&a=k[c.first+b];i m=a.o<0||a.o==c.aS?0:ak[c.aS][a.o];if(m<0)m=60;a.bO=m?m+(a.al+D-1)/D:0,a.bP=a.al*m*as;}}double cZ(int g,int d,int I){
-int b6=b4[g],b7=b5[g];if(b6>=d&&b7>=I)return 0;for(auto&h:ag[g]){b6+=h.second>>32,b7+=int(h.second);if(b6>=d&&b7>=I)return h.first-l;}return 1e9;}void b8(int g,int n,double end){
-b4[g]-=k[n].d,b5[g]-=k[n].I;pair<double,i>u(end,i(k[n].d)<<32|k[n].I);ag[g].insert(lower_bound(ag[g].begin(),ag[g].end(),u),u);}void c0(int n){B&a=k[n];
-O&c=G[a.ac];for(int f=c.ad;f>=0;f=ab[f])if(bd[f]+a.d>au[f])return;if(a.aO>l&&(a.am<0||(aK[a.am]&&cw[a.am]<a.ct))){if(a.am>=0)b8(a.am,n,a.cu);return;}double bj=max(1.0,a.q*cD(c.ad)),ap=1e18,bk=b0[n],aC=0,b9=0;
-int aD=-1;static i a3[30],cK[30];vector<pair<double,int>>Y;j(s,R){i bi;if(cF(a,s,a3[s],cK[s],bi))Y.push_back({cK[s]+bk*(a3[s]+1.*bi*!a.bg.empty())+a.d*T[U[s]]*(a3[s]+bj),s}
-);}sort(Y.begin(),Y.end());if(Y.size()>6.)Y.resize(6.);if(1.>0){static int aE[8][5],a4[8];static i aF[8][5];static double bl[8][5],ca[8][5];int A=0,cb[8];
-for(int cL:a.bg){B&o=k[cL];int t=0;if(o.o>=0)aE[A][t]=o.o,aF[A][t++]=o.al;for(int w:o.J)if(w!=n&&t<5&&(k[w].y||1.>0)){B*h=&k[w];for(int cM=0;cM<3&&!h->y&&h->o<0&&h->J.size();
-cM++)h=&k[h->J[0]];aE[A][t]=h->y>1?h->bN:h->y?ah[h->aN]:h->o<0?c.aS:h->o,aF[A][t++]=k[w].aM;}if(!t||A>7)continue;j(f,t){bl[A][f]=ca[A][f]=0;j(v,t){i m=bY(aE[A][f],aE[A][v]);
-if(m)bl[A][f]=max(bl[A][f],double(m+(aF[A][v]+D-1)/D)),ca[A][f]+=aF[A][v]*m;}}a4[A]=t,cb[A++]=cL;}if(A){for(auto&aq:Y){int s=aq.second;j(b,A){double cN=b0[cb[b]]+k[cb[b]].d*T[U[s]],cc=0,cO=0;
-j(f,a4[b]){i m=bY(s,aE[b][f]);if(m)cc=max(cc,double(m+(aF[b][f]+D-1)/D)),cO+=aF[b][f]*m;}double cd=cN*cc+as*cO;j(f,a4[b]){i m=bY(s,aE[b][f]);cd=min(cd,cN*max(m?double(m+(a.aM+D-1)/D):0,bl[b][f])+as*(a.aM*m+ca[b][f]));
-}aq.first+=1.*cd;}}sort(Y.begin(),Y.end());}}for(auto&aq:Y){if(aq.first>=ap)break;int s=aq.second;for(int g:cH[s]){if(!aK[g]||cn[g]<a.d||co[g]<a.I)continue;
-double Q=cZ(g,a.d,a.I);if(aq.first+bk*Q>=ap)continue;i an=0,aX=0;for(int z:bK[a.bM])if(!at[g].N[z])(aJ[s].N[z]?aX:an)+=av[z];i o=max(a3[s],(an+aG-1)/aG+(aX+aH-1)/aH);
-double W=aq.first+an*bC+(a.d*T[U[s]]+bk)*(o-a3[s])+bk*Q;if(W<ap)ap=W,aD=g,aC=Q,b9=o;}}a.ct=l,a.am=-1,a.aO=l+3.;if(aD<0||aC>30.)return;if(aC>0){a.am=aD,a.cu=l+aC+b9+bj,a.aO=l+min(4.,aC*.5);
-b8(aD,n,l+aC+b9+bj);return;}cU(n,aD);c.aR=c.aT=1;b1=b1*.98+.02*max(0.0,a.ay-a.bO);b2=b2*.98+.02*min(12.,double(l-a.V));b3=b3*.98+.02*(cv-a.bP);aY[n]=l+a.ay+bj;
-b8(aD,n,aY[n]);}void c1(){double cP=clock()*1./CLOCKS_PER_SEC,ce=cP-.08-.62*l/a5;if(cP>.93||(ce>0&&l%(1<<min(5,int(ce/.04)))))return;cE();bS=bT=0;j(b,S)bU[b]=bV[b]=0;
-j(g,bB){b4[g]=a8[g],b5[g]=a9[g];ag[g].clear();for(int h:ai[g]){double bm=max(0,l-k[h].ax-k[h].ay);int p=G[k[h].ac].ad;if(bm>k[h].q*bW[p])bS+=bm,bU[p]+=bm,bT+=k[h].q,bV[p]+=k[h].q;
-ag[g].push_back({aY[h]=max(l+1+.25*bm,aY[h]),i(k[h].d)<<32|k[h].I});}sort(ag[g].begin(),ag[g].end());}cE();vector<pair<double,int>>bn;j(cf,G.size()){O&c=G[cf];
-if(c.aQ||!c.aP)continue;if(c.aT||(ce<0&&(l+cf)%int(6.)==0)){double M,a1,W,bo=0;cW(c,M,a1,W);static const double bp[5]={-1,-.5,0,1,2};M*=1+.03*log(c.aP);
-j(t,5)bo+=cI(c,l+M*(1+.4*bp[t]))/5;if(l+M>a5)bo=0;c.aT=0,c.aU=1;if(bo>W*(c.aR?1.:1+0.)){c.aU=-(bo-W)/(a1+1)*(c.aR?3.:1)/(1+1.*max(0.0,(c.ae-l-M)/M));}else if(c.aR){
-c.aQ=1;j(b,c.x)if(k[c.first+b].y==1){af+="KILL "+to_string(k[c.first+b].E)+"\n";bX(c.first+b);}}else if(cI(c,l+M*.6)<=0)c.aQ=1;}if(c.aU<0&&!c.aQ)bn.push_back({
-c.aU,cf});}sort(bn.begin(),bn.end());for(auto&p:bn){O&c=G[p.second];vector<pair<double,int>>V;j(b,c.x){B&a=k[c.first+b];if(a.y==0&&a.bf==0)V.push_back({
--ao[c.first+b],c.first+b});}sort(V.begin(),V.end());for(auto&h:V)c0(h.second);}}int main(){a5=e(),bz=e(),bA=e(),R=e(),bB=e(),S=e();ci=e(),cj=e(),ck=e(),cl=e(),cm=e();
-aG=e(),aH=e(),D=e(),bC=e(),as=e();j(b,bz)T[b]=e();j(b,R)U[b]=e(),a7[b]=e(),aJ[b].bD=e();j(b,bB){ah[b]=e(),a8[b]=cn[b]=e(),a9[b]=co[b]=e();at[b].bD=e(),aK[b]=1;
-cH[ah[b]].push_back(b);}j(b,cm){ba[b]=e(),bb[b]=e(),aj[b]=e(),bc[b]=1;bF[ba[b]].push_back(b),bF[bb[b]].push_back(b);}j(b,S)ab[b]=e(),au[b]=e();{int cQ=0;
-vector<char>cg(S);while(cQ<S)j(b,S)if(!cg[b]&&(ab[b]<0||cg[ab[b]]))cg[b]=1,bG[cQ++]=b;}j(b,ci)av[b]=e();j(b,cj){int t=e();while(t--)bK[b].push_back(e());
-}{i Q[20];char bq[20]={};j(b,9)Q[b]=e(),bq[b]=1;for(int E=9;E<17;E++){int ch[2];j(t,2){int v=-1;j(b,E)if(bq[b]&&(v<0||Q[b]<Q[v]))v=b;bq[v]=0,ch[t]=v;cs[E][t]=v;
-}Q[E]=Q[ch[0]]+Q[ch[1]],bq[E]=1;}bL=16;}{C.push_back(array<int,8>());aw.push_back(0);j(b,ck){int x=ar(),r=0;j(t,x){int d=aa[t]-'a';if(!C[r][d])C[r][d]=C.size(),C.push_back(array<int,8>()),aw.push_back(0);
-r=C[r][d];}aw[r]+=e();}vector<int>br(C.size()),bs;j(d,8)if(C[0][d])bs.push_back(C[0][d]);j(c2,bs.size()){int r=bs[c2];aw[r]+=aw[br[r]];j(d,8){int u=C[r][d];
-if(u)br[u]=C[br[r]][d],bs.push_back(u);else C[r][d]=C[br[r]][d];}}}j(f,R)aV[f]=1;for(;;){if(!ar())break;l=e();int c3=e(),a4=e();while(c3--){ar();string H=aa;
-if(H=="DONE"){int n=bh[e()];B&a=k[n];O&c=G[a.ac];int p=c.ad;cq[p]+=l-a.ax-a.ay,cr[p]+=a.q,cB+=l-a.ax-a.ay,cC+=a.q;bX(n);a.y=2;a.bN=ah[a.aN];for(int o:a.bg)k[o].bf--,k[o].V=l;
-c.aP--;if(!c.aP)c.cR=l;}else if(H=="FAIL"){int g=e();while(ai[g].size())bX(ai[g][0]);aK[g]=0;a6&d=at[g];d.h.clear(),d.aI=0;memset(d.N,0,400);}else if(H=="UP"){
-int g=e();aK[g]=1;}else if(H=="DCDOWN"||H=="DCUP"){bE[e()]=H.size()>4,aL=1;j(f,R)aV[f]=1;}else if(H=="LDOWN"||H=="LUP"){int q=e(),r=ba[q],u=bb[q];bc[q]=H.size()<4,aL=1;
-j(f,R){i g=bR[f][r],bt=bR[f][u];if(bc[q]?g+aj[q]<bt||bt+aj[q]<g:g+aj[q]==bt||bt+aj[q]==g)aV[f]=1;}}else if(H=="QUOTA"){int L=e();be.push_back({L,au[L]}
-);au[L]=e();}else if(H=="UNDO"){int t=e();while(t--)au[be.back().first]=be.back().second,be.pop_back();}else if(H=="LOG"){int g=e(),v=e(),r=bL,P=0;ar();
-i bp=0;j(b,v){int K=aa[b/4],c4=((K<='9'?K-'0':(K|32)-'a'+10)>>(3-b%4))&1;r=cs[r][c4];if(r<9){P=r<8?C[P][r]:0;bp+=aw[P];r=bL;}}cp[g][l]+=bp;}else{O c;c.E=e(),c.ad=e(),c.u=e(),c.ae=e(),c.x=c.aP=e();
-c.bQ=l,c.first=k.size(),c.aQ=c.aR=c.cS=0,c.aT=1,c.aU=1;j(b,c.x){B a;a.E=e(),a.d=e(),a.I=e(),a.q=e(),a.bM=e();a.o=e(),a.al=e(),a.aM=e(),a.bf=e();a.y=0,a.ac=G.size(),a.V=l,a.aO=0;
-j(t,a.bf){int w=bh[e()];a.J.push_back(w);k[w].bg.push_back(k.size());}bh[a.E]=k.size();k.push_back(a);}if(aL)cz();cY(c);G.push_back(c);}}if(aL)cz();af="ANS";
-while(a4--){ar();char h=aa[0],c5=aa[1];int f=e();i Z=0;if(h=='B'){static i bu[200];j(b,S)bu[b]=bH[b]+bI[b]*l-bJ[b];for(int b=S-1;b>0;b--)bu[ab[bG[b]]]+=bu[bG[b]];
-Z=bu[f];}else if(h=='H'){Z=1e18;for(;f>=0;f=ab[f])Z=min(Z,au[f]-bd[f]);}else if(h=='R'&&c5=='O')Z=ak[f][e()];else if(h=='A'){for(int L=max(1,l-cl+1);L<=l;
-L++)Z+=cp[f][L];}else if(h=='S')Z=cV(bh[f]);else Z=(h=='C'?at[f]:aJ[f]).aI;af+=" "+to_string(Z);}af+="\n";c1();af+="END\n";fwrite(af.data(),1,af.size(),stdout);
-fflush(stdout);if(l==a5)break;}}
+#define j(b,y) for(int b=0;b<(int)(y);b++)
+char bA[1<<16],ac[1<<22];int bB,bC;int bD(){if(bB==bC){bC=read(0,bA,sizeof bA);bB=0;if(bC<=0)return-1;}return bA[bB++];}int ax(){int d=bD(),y=0;while(d==' '||d=='\n'||d=='\r')d=bD();
+while(d>' ')ac[y++]=d,d=bD();ac[y]=0;return y;}i e(){ax();return atoll(ac);}int aL,bE,bF,V,bG,W,cm,cn,co,cp,cq,l;i aM,aN,E,aO,ay,X[8];struct a9{vector<int>h;
+i bH,aP;int bI;char K[400];};a9 ad[30],az[360];int Y[30],ba[30];int am[360],cr[360],cs[360],bb[360],bc[360],aQ[360];vector<int>an[360];i ct[360][602];int bd[1000],be[1000],ao[1000],bf[1000],bJ[8],aR=1;
+vector<int>bK[600];i ap[30][30];int ae[200],bL[200];i aA[200],bg[200],bM[200],bN[200],bO[200];double cu[602],cv[602];vector<pair<int,i>>bh;int aq[400];
+vector<int>bi[120];int cw[20][2],bP;vector<array<int,8>>C;vector<i>aB;struct B{int D,af,d,L,s,ar,p,as,aS,z,aT,aC,aD,bQ,bj,G;int at,cx,aU;double cy,bR,bS;
+vector<int>M,bk;};struct S{int D,ag,ah,bT,first,y,aV,aW,cZ,aX,aY,aZ,c0;double a0;i u;};vector<B>k;vector<S>H;unordered_map<int,int>bl;string Z;i bm;int cz[360];
+bool cA(a9&d,int v){if(!d.K[v])return 0;d.h.erase(find(d.h.begin(),d.h.end(),v));d.h.push_back(v);return 1;}void cB(a9&d,int v){d.h.push_back(v);d.K[v]=1,d.bI++;
+d.aP+=aq[v];while(d.aP>d.bH){int r=d.h[0];d.aP-=aq[r];d.K[r]=0;d.h.erase(d.h.begin());}}i bU[30][600];char a1[30];void cC(){static int h[1024];static char K[600];
+int cD=bF/bE;j(f,V)if(a1[f]){i*n=bU[f];j(b,bF)n[b]=1e18;int p=ba[f],N=0,O=0;if(!bJ[p/cD])n[p]=0,h[O++]=p;while(N!=O){int t=h[N++&1023];K[t]=0;for(int s:bK[t]){
+int u=bd[s]^be[s]^t;if(bf[s]&&!bJ[u/cD]&&n[t]+ao[s]<n[u]){n[u]=n[t]+ao[s];if(!K[u])K[u]=1,h[O++&1023]=u;}}}j(w,V)ap[f][w]=n[ba[w]]>9e17?-1:n[ba[w]];a1[f]=0;
+}aR=0;}double cE,cF,bV,bW,bX[602],bY[602],bZ[602];double cG(int r){return bZ[r];}void cH(){double c1=(cE+bV+100.*1.5)/(cF+bW+100.);j(r,W)bZ[r]=(cu[r]+bX[r]+30.*c1)/(cv[r]+bY[r]+30.);
+}void bn(int o){B&a=k[o];int g=a.aT,r=H[a.af].ag;i F=a.d*X[Y[am[g]]];bb[g]+=a.d;bc[g]+=a.L;cz[g]=l;H[a.af].aZ=1;an[g].erase(find(an[g].begin(),an[g].end(),o));
+bM[r]+=F*(l-a.aC);bN[r]-=F;bO[r]-=F*a.aC;for(int f=r;f>=0;f=ae[f])bg[f]-=a.d;a.z=0;a.G=l,a.aU=0;}i b0(int f,int w){return f==w?0:ap[f][w]<0?99:ap[f][w];
+}bool cI(B&a,int m,i&aE,i&a2,i&b1){aE=a2=b1=0;int q=a.M.size();for(int b=a.p<0?0:-1;b<q;b++){int p=b<0?a.p:k[a.M[b]].bQ;i cJ=b<0?a.as:k[a.M[b]].aS;if(p==m)continue;
+i n=ap[m][p];if(n<0)return 0;aE=max(aE,n+(cJ+E-1)/E);a2+=cJ*n*ay;if(b>=0)b1=max(b1,n);}return 1;}void cK(int o,int g){B&a=k[o];int m=am[g],r=H[a.af].ag;
+i aE,a2,bo,ai=0,a3=0;cI(a,m,aE,a2,bo);for(int v:bi[a.ar]){if(cA(az[g],v))continue;if(cA(ad[m],v))a3+=aq[v];else ai+=aq[v],cB(ad[m],v);cB(az[g],v);}i F=a.d*X[Y[m]];
+a.aD=max(aE,(ai+aM-1)/aM+(a3+aN-1)/aN);a.z=1;a.aT=g;a.aC=l;bb[g]-=a.d;bc[g]-=a.L;an[g].push_back(o);bM[r]+=bm=a2+ai*aO;bN[r]+=F;bO[r]+=F*l;for(int f=r;
+f>=0;f=ae[f])bg[f]+=a.d;Z+="RUN "+to_string(a.D)+" "+to_string(g)+"\n";}i c2(int o){S&c=H[k[o].af];static i aF[1<<16],aG[1<<16];i F=0;j(b,c.y){B&a=k[c.first+b];
+aF[b]=0;aG[b]=0;if(a.z>1)continue;for(int x:a.M)if(k[x].z<2)aF[b]=max(aF[b],aF[x-c.first]+k[x].s);F=max(F,aF[b]+a.s);}for(int b=c.y-1;b>=0;b--){B&a=k[c.first+b];
+if(a.z>1)continue;aG[b]+=a.s;for(int x:a.M)aG[x-c.first]=max(aG[x-c.first],aG[b]);}return F-aF[o-c.first]-aG[o-c.first];}double a4[1<<17],b2[1<<17],au[1<<17],b3=3,b4=1,b5=50;
+vector<pair<double,i>>aj[360];int b6[360],b7[360];vector<int>cL[30];double cM(S&c,double ak){i a5=max(5,(c.ah-c.bT)/3);if(ak<=c.ah)return c.u;if(ak>=c.ah+a5)return 0;
+return c.u*(c.ah+a5-ak)/a5;}void c3(S&c,double&P,double&a6,double&Q){static double T[1<<16],aa[1<<16];double ak=cG(c.ag);i c4=X[Y[c.aY]];P=a6=Q=0;j(b,c.y){
+B&a=k[c.first+b];T[b]=aa[b]=0;if(a.z>1)continue;for(int x:a.M)T[b]=max(T[b],T[x-c.first]+aa[x-c.first]);aa[b]=a.z?a4[c.first+b]-l:a.s*ak+1.*b3+a.bR;a6+=a.d*aa[b];
+if(!a.z)aa[b]+=0.*b4;Q+=a.z?a.d*aa[b]*X[Y[am[a.aT]]]:a.d*aa[b]*c4+b5+a.bS;P=max(P,T[b]+aa[b]);au[c.first+b]=0;}i a5=max(5,(c.ah-c.bT)/3);for(int b=c.y-1;
+b>=0;b--){int o=c.first+b;B&a=k[o];if(a.z>1)continue;au[o]+=aa[b];for(int x:a.M)au[x]=max(au[x],au[o]);double cN=T[b]+au[o],g=(l+cN-c.ah)/(1.*cN+1)+1;b2[o]=5.*a.d+c.u*1.0/a5*min(1.0,max(0.0,g));
+}}void c5(S&c){double al=1e18;j(N,V){double a7=0;j(b,c.y){B&a=k[c.first+b];i F=a.d*X[Y[N]],n=a.p<0||a.p==N?0:ap[N][a.p];a7+=F*a.s;if(n<0)a7+=1e9;if(n>0)a7+=a.as*n*ay+(n+(a.as+E-1)/E)*(F+5.*a.d);
+}if(a7<al)al=a7,c.aY=N;}j(b,c.y){B&a=k[c.first+b];i n=a.p<0||a.p==c.aY?0:ap[c.aY][a.p];if(n<0)n=60;a.bR=n?n+(a.as+E-1)/E:0,a.bS=a.as*n*ay;}}double c6(int g,int d,int L,double c7){
+int b8=b6[g],b9=b7[g];if(b8>=d&&b9>=L)return 0;for(auto&h:aj[g]){if(h.first-l>c7)break;b8+=h.second>>32,b9+=int(h.second);if(b8>=d&&b9>=L)return h.first-l;
+}return 1e9;}void ca(int g,int o,double end){b6[g]-=k[o].d,b7[g]-=k[o].L;pair<double,i>u(end,i(k[o].d)<<32|k[o].L);aj[g].insert(lower_bound(aj[g].begin(),aj[g].end(),u),u);
+}void c8(int o){B&a=k[o];S&c=H[a.af];for(int f=c.ag;f>=0;f=ae[f])if(bg[f]+a.d>aA[f]){return;}if(a.aU>l&&(a.at<0||(aQ[a.at]&&cz[a.at]<a.cx))){if(a.at>=0)ca(a.at,o,a.cy);
+return;}double bp=max(1.0,a.s*cG(c.ag)),al=1e18,aH=b2[o],av=0,cb=0;int aw=-1,cO=0;static i aI[30],cc[30];static double cd[30];static vector<pair<double,int>>I;
+I.clear();j(m,V){i bo;if(cI(a,m,aI[m],cc[m],bo)){static i c9[120][30];static int cP[120][30];i&h=c9[a.ar][m];if(cP[a.ar][m]!=ad[m].bI+1){cP[a.ar][m]=ad[m].bI+1,h=0;
+for(int v:bi[a.ar])if(!ad[m].K[v])h+=aq[v];}cd[m]=1.*h*aO;pair<double,int>u={cd[m]+cc[m]+aH*(aI[m]+1.*bo*!a.bk.empty())+a.d*X[Y[m]]*(aI[m]+bp),m};int q=I.size();
+if(q<12.)I.push_back(u);else if(u.first<I[--q].first);else continue;for(;q&&u.first<I[q-1].first;q--)I[q]=I[q-1];I[q]=u;}}if(1.>0){static int aJ[8][5],a8[8];
+static i aK[8][5];static double bq[8][5],ce[8][5];int A=0,cf[8];for(int cQ:a.bk){B&p=k[cQ];int q=0;if(p.p>=0)aJ[A][q]=p.p,aK[A][q++]=p.as;for(int x:p.M)if(x!=o&&q<5&&(k[x].z||1.>0)){
+B*h=&k[x];for(int cR=0;cR<3&&!h->z&&h->p<0&&h->M.size();cR++)h=&k[h->M[0]];aJ[A][q]=h->z>1?h->bQ:h->z?am[h->aT]:h->p<0?c.aY:h->p,aK[A][q++]=k[x].aS;}if(!q||A>7)continue;
+j(f,q){bq[A][f]=ce[A][f]=0;j(w,q){i n=b0(aJ[A][f],aJ[A][w]);if(n)bq[A][f]=max(bq[A][f],double(n+(aK[A][w]+E-1)/E)),ce[A][f]+=aK[A][w]*n;}}a8[A]=q,cf[A++]=cQ;
+}if(A){for(auto&U:I){int m=U.second;j(b,A){double cS=b2[cf[b]]+k[cf[b]].d*X[Y[m]],cg=0,cT=0;j(f,a8[b]){i n=b0(m,aJ[b][f]);if(n)cg=max(cg,double(n+(aK[b][f]+E-1)/E)),cT+=aK[b][f]*n;
+}double ch=cS*cg+ay*cT;j(f,a8[b]){i n=b0(m,aJ[b][f]);ch=min(ch,cS*max(n?double(n+(a.aS+E-1)/E):0,bq[b][f])+ay*(a.aS*n+ce[b][f]));}U.first+=1.*ch;}}sort(I.begin(),I.end());
+}}for(auto&U:I){int m=U.second;U.first-=cd[m];if(U.first>=al)continue;for(int g:cL[m]){if(!aQ[g]||cr[g]<a.d||cs[g]<a.L)continue;double R=c6(g,a.d,a.L,(al-U.first)/(aH+1e-9));
+if(U.first+aH*R>=al)continue;i ai=0,a3=0;for(int v:bi[a.ar])if(!az[g].K[v])(ad[m].K[v]?a3:ai)+=aq[v];i p=max(aI[m],(ai+aM-1)/aM+(a3+aN-1)/aN);double Q=U.first+ai*aO+(a.d*X[Y[m]]+aH)*(p-aI[m])+aH*R;
+double cU=U.first+ai*aO+cc[m]+aH*R;int cV=1.>0&&cU<Q;if(cV)Q=cU,p=aI[m];if(Q<al)al=Q,aw=g,av=R,cb=p,cO=cV;}}a.cx=l,a.at=-1,a.aU=l+3.;if(aw<0||av>30.)return;
+if(av>0){a.at=aw,a.cy=l+av+cb+bp,a.aU=l+min(4.,av*.5);ca(aw,o,l+av+cb+bp);return;}int da=a.G;i cW=0;if(cO&&!av){cK(o,aw);cW=bm;Z+="KILL "+to_string(a.D)+"\n";
+bn(o);a.G=da;}cK(o,aw);bm+=cW;c.aX=c.aZ=1;b3=b3*.98+.02*max(0.0,a.aD-a.bR);b4=b4*.98+.02*min(12.,double(l-a.G));b5=b5*.98+.02*(bm-a.bS);a4[o]=l+a.aD+bp;
+ca(aw,o,a4[o]);}void db(){double cX=clock()*1./CLOCKS_PER_SEC,ci=cX-.08-.62*l/aL;if(cX>.93||(ci>0&&l%(1<<min(5,int(ci/.04)))))return;cH();bV=bW=0;j(b,W)bX[b]=bY[b]=0;
+j(g,bG){b6[g]=bb[g],b7[g]=bc[g];aj[g].clear();for(int h:an[g]){double br=max(0,l-k[h].aC-k[h].aD);int r=H[k[h].af].ag;if(br>k[h].s*bZ[r])bV+=br,bX[r]+=br,bW+=k[h].s,bY[r]+=k[h].s;
+aj[g].push_back({a4[h]=max(l+1+.25*br,a4[h]),i(k[h].d)<<32|k[h].L});}sort(aj[g].begin(),aj[g].end());}cH();vector<pair<double,int>>bs;j(cj,H.size()){S&c=H[cj];
+if(c.aW||!c.aV)continue;if(c.aZ||(ci<0&&(l+cj)%int(6.)==0)){double P,a6,Q,bt=0;c3(c,P,a6,Q);static const double bu[5]={-1,-.5,0,1,2};P*=1+.03*log(c.aV);
+j(q,5){double ak=l+P*(1+.4*bu[q]);if(ak<=aL+30.||!1.)bt+=cM(c,ak)/5;}if(!1.&&l+P>aL)bt=0;c.aZ=0,c.a0=1;if(bt>Q*(c.aX?1.:1+0.)){c.a0=-(bt-Q)/(a6+1)*(c.aX?3.:1)/(1+1.*max(0.0,(c.ah-l-P)/P));
+}else if(c.aX){c.aW=1;j(b,c.y)if(k[c.first+b].z==1){Z+="KILL "+to_string(k[c.first+b].D)+"\n";bn(c.first+b);}}else if(cM(c,l+P*.6)<=0)c.aW=1;}if(c.a0<0&&!c.aW)bs.push_back({
+c.a0,cj});}sort(bs.begin(),bs.end());for(auto&r:bs){S&c=H[r.second];static vector<pair<double,int>>G;G.clear();j(b,c.y){B&a=k[c.first+b];if(a.z==0&&a.bj==0)G.push_back({
+-au[c.first+b],c.first+b});}sort(G.begin(),G.end());for(auto&h:G)c8(h.second);}}int main(){aL=e(),bE=e(),bF=e(),V=e(),bG=e(),W=e();cm=e(),cn=e(),co=e(),cp=e(),cq=e();
+aM=e(),aN=e(),E=e(),aO=e(),ay=e();j(b,bE)X[b]=e();j(b,V)Y[b]=e(),ba[b]=e(),ad[b].bH=e();j(b,bG){am[b]=e(),bb[b]=cr[b]=e(),bc[b]=cs[b]=e();az[b].bH=e(),aQ[b]=1;
+cL[am[b]].push_back(b);}j(b,cq){bd[b]=e(),be[b]=e(),ao[b]=e(),bf[b]=1;bK[bd[b]].push_back(b),bK[be[b]].push_back(b);}j(b,W)ae[b]=e(),aA[b]=e();{int cY=0;
+vector<char>ck(W);while(cY<W)j(b,W)if(!ck[b]&&(ae[b]<0||ck[ae[b]]))ck[b]=1,bL[cY++]=b;}j(b,cm)aq[b]=e();j(b,cn){int q=e();while(q--)bi[b].push_back(e());
+}{i R[20];char bv[20]={};j(b,9)R[b]=e(),bv[b]=1;for(int D=9;D<17;D++){int cl[2];j(q,2){int w=-1;j(b,D)if(bv[b]&&(w<0||R[b]<R[w]))w=b;bv[w]=0,cl[q]=w;cw[D][q]=w;
+}R[D]=R[cl[0]]+R[cl[1]],bv[D]=1;}bP=16;}{C.push_back(array<int,8>());aB.push_back(0);j(b,co){int y=ax(),t=0;j(q,y){int d=ac[q]-'a';if(!C[t][d])C[t][d]=C.size(),C.push_back(array<int,8>()),aB.push_back(0);
+t=C[t][d];}aB[t]+=e();}vector<int>bw(C.size()),bx;j(d,8)if(C[0][d])bx.push_back(C[0][d]);j(dc,bx.size()){int t=bx[dc];aB[t]+=aB[bw[t]];j(d,8){int u=C[t][d];
+if(u)bw[u]=C[bw[t]][d],bx.push_back(u);else C[t][d]=C[bw[t]][d];}}}j(f,V)a1[f]=1;for(;;){if(!ax())break;l=e();int dd=e(),a8=e();while(dd--){ax();string J=ac;
+if(J=="DONE"){int o=bl[e()];B&a=k[o];S&c=H[a.af];int r=c.ag;cu[r]+=l-a.aC-a.aD,cv[r]+=a.s,cE+=l-a.aC-a.aD,cF+=a.s;bn(o);a.z=2;a.bQ=am[a.aT];for(int p:a.bk)k[p].bj--,k[p].G=l;
+c.aV--;if(!c.aV)c.cZ=l;}else if(J=="FAIL"){int g=e();while(an[g].size())bn(an[g][0]);aQ[g]=0;a9&d=az[g];d.h.clear(),d.aP=0;memset(d.K,0,400);}else if(J=="UP"){
+int g=e();aQ[g]=1;}else if(J=="DCDOWN"||J=="DCUP"){bJ[e()]=J.size()>4,aR=1;j(f,V)a1[f]=1;}else if(J=="LDOWN"||J=="LUP"){int s=e(),t=bd[s],u=be[s];bf[s]=J.size()<4,aR=1;
+j(f,V){i g=bU[f][t],by=bU[f][u];if(bf[s]?g+ao[s]<by||by+ao[s]<g:g+ao[s]==by||by+ao[s]==g)a1[f]=1;}}else if(J=="QUOTA"){int O=e();bh.push_back({O,aA[O]}
+);aA[O]=e();}else if(J=="UNDO"){int q=e();while(q--)aA[bh.back().first]=bh.back().second,bh.pop_back();}else if(J=="LOG"){int g=e(),w=e(),t=bP,T=0;ax();
+i bu=0;j(b,w){int N=ac[b/4],de=((N<='9'?N-'0':(N|32)-'a'+10)>>(3-b%4))&1;t=cw[t][de];if(t<9){T=t<8?C[T][t]:0;bu+=aB[T];t=bP;}}ct[g][l]+=bu;}else{S c;c.D=e(),c.ag=e(),c.u=e(),c.ah=e(),c.y=c.aV=e();
+c.bT=l,c.first=k.size(),c.aW=c.aX=c.c0=0,c.aZ=1,c.a0=1;j(b,c.y){B a;a.D=e(),a.d=e(),a.L=e(),a.s=e(),a.ar=e();a.p=e(),a.as=e(),a.aS=e(),a.bj=e();a.z=0,a.af=H.size(),a.G=l,a.aU=0;
+j(q,a.bj){int x=bl[e()];a.M.push_back(x);k[x].bk.push_back(k.size());}bl[a.D]=k.size();k.push_back(a);}if(aR)cC();c5(c);H.push_back(c);}}if(aR)cC();Z="ANS";
+while(a8--){ax();char h=ac[0],df=ac[1];int f=e();i ab=0;if(h=='B'){static i bz[200];j(b,W)bz[b]=bM[b]+bN[b]*l-bO[b];for(int b=W-1;b>0;b--)bz[ae[bL[b]]]+=bz[bL[b]];
+ab=bz[f];}else if(h=='H'){ab=1e18;for(;f>=0;f=ae[f])ab=min(ab,aA[f]-bg[f]);}else if(h=='R'&&df=='O')ab=ap[f][e()];else if(h=='A'){for(int O=max(1,l-cp+1);
+O<=l;O++)ab+=ct[f][O];}else if(h=='S')ab=c2(bl[f]);else ab=(h=='C'?az[f]:ad[f]).aP;Z+=" "+to_string(ab);}Z+="\n";db();Z+="END\n";fwrite(Z.data(),1,Z.size(),stdout);
+fflush(stdout);if(l==aL)break;}}

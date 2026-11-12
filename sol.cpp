@@ -60,6 +60,7 @@ ll Breg, Brack, Bnet, Ureg, Unet, price[8];
 struct Cache {
     vector<int> q;  // LRU order, front = least recently used
     ll cap, sum;
+    int ver;  // bumped whenever the contents change
     char in[400];
 };
 Cache rackCache[30], machCache[360];
@@ -118,7 +119,7 @@ bool cacheHit(Cache& c, int l) {
 }
 void cachePut(Cache& c, int l) {
     c.q.push_back(l);
-    c.in[l] = 1;
+    c.in[l] = 1, c.ver++;
     c.sum += layerSize[l];
     while (c.sum > c.cap) {
         int o = c.q[0];
@@ -188,14 +189,14 @@ PRM(ADM, 0);      // required profit margin (fraction of cost) to start a flow
 PRM(THR, 6);      // waiting flows are re-evaluated every THR ticks
 PRM(OD, 0.25);    // an overdue job is expected to need OD * (its run time so far) more ticks
 
-PRM(WK, 1);       // weight of the learned queueing delay per job
+PRM(WK, 0);       // weight of the learned queueing delay per job
 PRM(WCAP, 12);    // cap on one observation of queueing delay
 PRM(RT0, 3);      // ticks before a job without a usable machine is examined again
 PRM(RT1, 4);      // longest life of a cached reservation
 PRM(RTK, 0.5);    // cached reservation lives RTK * (expected wait)
 PRM(BB, 0.03);    // growth of the remaining-time estimate with the number of unfinished jobs
 PRM(SL, 1);       // priority discount for flows with plenty of slack
-PRM(RK, 6);       // number of candidate racks examined per job
+PRM(RK, 12);      // number of candidate racks examined per job
 PRM(LAK, 1);      // weight of the one-step look-ahead in rack selection
 PRM(GU, 1);       // 1: guess the rack of unplaced predecessors in the look-ahead
 #ifdef DBG
@@ -206,6 +207,10 @@ PRM(TS, 1);
 PRM(F0, 1.5);     // prior real/estimated duration ratio
 PRM(W0, 100);     // weight of that prior (in estimated ticks)
 PRM(W1, 30);      // weight of the pooled ratio in a tenant's ratio
+PRM(PW, 1);       // 1: warm the caches with RUN + KILL in the same tick before the real RUN
+PRM(HS, 1);       // 1: the end of the horizon is applied to each finish-time scenario separately
+PRM(HZ, 30);      // tolerance (ticks) of that test
+PRM(RF, 1);       // weight of the registry fee when racks are ranked
 
 // ---------------- job lifecycle ----------------
 // real/estimated duration ratio of a tenant. Evidence: finished jobs, plus running jobs that are
@@ -391,10 +396,11 @@ void chooseHome(Flow& w) {
 }
 
 // expected ticks until machine x has room for (c, m)
-double waitFor(int x, int c, int m) {
+double waitFor(int x, int c, int m, double lim) {
     int fc = virtCpu[x], fm = virtMem[x];
     if (fc >= c && fm >= m) return 0;
     for (auto& q : timeline[x]) {
+        if (q.first - now > lim) break;  // too late to be the best choice
         fc += q.second >> 32, fm += int(q.second);
         if (fc >= c && fm >= m) return q.first - now;
     }
@@ -411,9 +417,14 @@ void tryPlace(int ji) {
     Job& j = jobs[ji];
     Flow& w = flows[j.wf];
     for (int a = w.tenant; a >= 0; a = tenPar[a])
-        if (tenUsed[a] + j.c > tenQuota[a]) return;
+        if (tenUsed[a] + j.c > tenQuota[a]) {
 #ifdef DBG
-    dbgCnt[0]++;
+            dbgBlk[0]++, dbgBlk[1] += j.c;
+#endif
+            return;
+        }
+#ifdef DBG
+    dbgCnt[0]++, dbgBlk[3] += j.c;
 #endif
     if (j.resT > now && (j.resM < 0 || (machUp[j.resM] && freedAt[j.resM] < j.resAt))) {
         if (j.resM >= 0) occupy(j.resM, ji, j.resEnd);
@@ -424,16 +435,34 @@ void tryPlace(int ji) {
     double dbgT4 = getenv("FINE") ? dbgClock() : 0;
 #endif
     double est = max(1.0, j.e * tenFactor(w.tenant)), best = 1e18, th = jobTheta[ji], bw = 0, bs = 0;
-    int bx = -1;
+    int bx = -1, bwarm = 0;
     static ll tts[30], tfs[30];
-    vector<pair<double, int>> cand;
+    static double rfee[30];
+    static vector<pair<double, int>> cand;
+    cand.clear();
     F(r, R) {
         ll aw;
-        if (transferCost(j, r, tts[r], tfs[r], aw))
-            cand.push_back({tfs[r] + th * (tts[r] + PEN * aw * !j.suc.empty()) + j.c * price[rackDc[r]] * (tts[r] + est), r});
+        if (transferCost(j, r, tts[r], tfs[r], aw)) {
+            // registry fee of the layers the rack cache does not hold (a machine may still hold them)
+            static ll iq[120][30];
+            static int iv[120][30];
+            ll& q = iq[j.img][r];
+            if (iv[j.img][r] != rackCache[r].ver + 1) {
+                iv[j.img][r] = rackCache[r].ver + 1, q = 0;
+                for (int l : imageLayers[j.img])
+                    if (!rackCache[r].in[l]) q += layerSize[l];
+            }
+            rfee[r] = RF * q * Ureg;
+            // keep the RK cheapest racks, sorted
+            pair<double, int> v = {rfee[r] + tfs[r] + th * (tts[r] + PEN * aw * !j.suc.empty()) + j.c * price[rackDc[r]] * (tts[r] + est), r};
+            int k = cand.size();
+            if (k < RK) cand.push_back(v);
+            else if (v.first < cand[--k].first) ;
+            else continue;
+            for (; k && v.first < cand[k - 1].first; k--) cand[k] = cand[k - 1];
+            cand[k] = v;
+        }
     }
-    sort(cand.begin(), cand.end());
-    if (cand.size() > RK) cand.resize(RK);
     if (LAK > 0) {
         // look one step ahead: every successor will have to gather this job's output and its other
         // inputs (external input, outputs of predecessors that are already placed) on one rack
@@ -486,24 +515,33 @@ void tryPlace(int ji) {
     if (dbgT4) dbgTime[7] += dbgClock() - dbgT4;
 #endif
     for (auto& cr : cand) {
-        if (cr.first >= best) break;
         int r = cr.second;
+        cr.first -= rfee[r];
+        if (cr.first >= best) continue;
         for (int x : rackMachs[r]) {
             if (!machUp[x] || machCpu[x] < j.c || machMem[x] < j.m) continue;
 #ifdef DBG
             dbgCnt[1]++;
 #endif
-            double wt = waitFor(x, j.c, j.m);
+            double wt = waitFor(x, j.c, j.m, (best - cr.first) / (th + 1e-9));
             if (cr.first + th * wt >= best) continue;
             ll qreg = 0, qrack = 0;
             for (int l : imageLayers[j.img])
                 if (!machCache[x].in[l]) (rackCache[r].in[l] ? qrack : qreg) += layerSize[l];
             ll s = max(tts[r], (qreg + Breg - 1) / Breg + (qrack + Brack - 1) / Brack);
             double cost = cr.first + qreg * Ureg + (j.c * price[rackDc[r]] + th) * (s - tts[r]) + th * wt;
-            if (cost < best) best = cost, bx = x, bw = wt, bs = s;
+            // A RUN puts the layers into the caches at once and a KILL in the same tick costs no run
+            // fee, so RUN + KILL + RUN skips the pull time; the transfer fee is then paid twice.
+            double warm = cr.first + qreg * Ureg + tfs[r] + th * wt;
+            int wm = PW > 0 && warm < cost;
+            if (wm) cost = warm, s = tts[r];
+            if (cost < best) best = cost, bx = x, bw = wt, bs = s, bwarm = wm;
         }
     }
     j.resAt = now, j.resM = -1, j.resT = now + RT0;
+#ifdef DBG
+    if (bx < 0 || bw > 0) dbgBlk[2]++, dbgBlk[4] += j.c;
+#endif
     if (bx < 0 || bw > RESV) return;
     if (bw > 0) {
         j.resM = bx, j.resEnd = now + bw + bs + est, j.resT = now + min(RT1, bw * RTK);
@@ -513,7 +551,20 @@ void tryPlace(int ji) {
         occupy(bx, ji, now + bw + bs + est);
         return;
     }
+    int rdy = j.ready;
+    ll fee0 = 0;
+    if (bwarm && !bw) {
+        runJob(ji, bx);
+        fee0 = runFee;
+        outbuf += "KILL " + to_string(j.id) + "\n";
+        release(ji);
+        j.ready = rdy;
+    }
     runJob(ji, bx);
+#ifdef DBG
+    if (bwarm && !bw) dbgCnt[6] += runFee, dbgCnt[7]++;
+#endif
+    runFee += fee0;
     w.started = w.dirty = 1;
     overhead = overhead * .98 + .02 * max(0.0, j.prep - j.xt);
     ovWait = ovWait * .98 + .02 * min(WCAP, double(now - j.ready));
@@ -555,8 +606,11 @@ void schedule() {
             flowEstimate(w, rem, work, cost);
             static const double sc[5] = {-1, -.5, 0, 1, 2};
             rem *= 1 + BB * log(w.left);  // the longest of many noisy paths is longer than the path of the means
-            F(k, 5) rev += revenueAt(w, now + rem * (1 + SP * sc[k])) / 5;
-            if (now + rem > T) rev = 0;
+            F(k, 5) {
+                double f = now + rem * (1 + SP * sc[k]);
+                if (f <= T + HZ || !HS) rev += revenueAt(w, f) / 5;  // nothing is earned after the last tick
+            }
+            if (!HS && now + rem > T) rev = 0;
             w.dirty = 0, w.key = 1;
             if (rev > cost * (w.started ? KILLK : 1 + ADM)) {
                 w.key = -(rev - cost) / (work + 1) * (w.started ? SB : 1) / (1 + SL * max(0.0, (w.dl - now - rem) / rem));
@@ -585,7 +639,8 @@ void schedule() {
 #endif
     for (auto& o : order) {
         Flow& w = flows[o.second];
-        vector<pair<double, int>> ready;
+        static vector<pair<double, int>> ready;
+        ready.clear();
         F(i, w.n) {
             Job& j = jobs[w.first + i];
             if (j.state == 0 && j.need == 0) ready.push_back({-jobTail[w.first + i], w.first + i});
@@ -834,6 +889,8 @@ int main() {
     fprintf(stderr, "BLK quota %lld (root %lld, lvl1 %lld, deeper %lld) nomach %lld wait %lld (of which same-dc alternative free %lld) started %lld\n", dbgBlk[0], dbgBlkDepth[0], dbgBlkDepth[1], dbgBlkDepth[2], dbgBlk[1], dbgBlk[2], dbgBlk[3], dbgBlk[4]);
     for (auto& kv : dbgEv) fprintf(stderr, "PERF ev %s %.3f\n", kv.first.c_str(), kv.second);
     fprintf(stderr, "UTIL cpu %.3f mem %.3f backlog/cap %.3f\n", dbgUtil[0] / dbgUtil[1], dbgUtil[3] / dbgUtil[4], dbgUtil[2] / dbgUtil[1]);
+    fprintf(stderr, "BLOCK quota %lld (core-ticks %lld) machine %lld (core-ticks %lld) attempts core-ticks %lld capacity core-ticks %.0f\n", dbgBlk[0], dbgBlk[1], dbgBlk[2], dbgBlk[4], dbgBlk[3], dbgUtil[1]);
+    fprintf(stderr, "WARM runs %lld duplicate transfer fee %lld\n", dbgCnt[7], dbgCnt[6]);
     fprintf(stderr, "PERF netRows %lld recomputes %lld R %d N %d\n", dbgCnt[4], dbgCnt[5], R, N);
     fprintf(stderr, "PERF net %.3f query %.3f netInWF %.3f home %.3f\n", dbgTime[3], dbgTime[4], dbgTime[5], dbgTime[6]);
     fprintf(stderr, "PERF total %.3f est %.3f place %.3f | tryPlace %lld real %lld machEval %lld reserve %lld rackPart %.3f\n", dbgClock(), dbgTime[1], dbgTime[2], dbgCnt[0], dbgCnt[3], dbgCnt[1], dbgCnt[2], dbgTime[7]);

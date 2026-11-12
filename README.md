@@ -10,7 +10,7 @@
 | 运行环境 | StablEdge 桌面端 Agent Lite 模式；推理强度高；上下文约 40 万 token；提示缓存 1 小时 |
 | 费用 | 122.20 元 |
 | 单价（元 / 百万 token） | 输入 28，输出 140，思考 140，缓存写入 35，缓存读取 0.7 |
-| OJ 得分 | **89 分**（满分 100，得分 = 通过的数据组数；2026-11-12 21:09:16 由用户提交 `submit.cpp`；OJ 显示用时 444 ms、内存 16304 kB；依据用户提供的截图。后续优化见 [issue #1](https://github.com/Shuang-su/SZTU-2026-data-structure-final-homework/issues/1)） |
+| OJ 得分 | **89 分**（满分 100，得分 = 通过的数据组数；2026-11-12 21:09:16 由用户提交当时的 `submit.cpp`，即现在的 `submit_v1.cpp`；OJ 显示用时 444 ms、内存 16304 kB；依据用户提供的截图。后续优化见下面的"v2"一节和 [issue #1](https://github.com/Shuang-su/SZTU-2026-data-structure-final-homework/issues/1)） |
 | Token | 总消耗 26,617,135；分阶段、分工具的数字无实测，只有按时间比例的粗估，见 [docs/开发记录.md](docs/开发记录.md) 第 8 节；按单价反推，缓存读取约占 86%–97%，见第 10 节 |
 | 仓库与文档 | 建仓库、推送和撰写文档在开发结束后进行，用的是 5.5，不改动调度程序 |
 
@@ -31,21 +31,47 @@
 
 完整的思路、待办清单、失败记录和等待时间的推算见 [docs/开发记录.md](docs/开发记录.md)。
 
+以上是 v1（OJ 89 分的版本）的开发情况。
+
+## v2（尚未在 OJ 提交）
+
+2026-11-12 22:10 至 23:16 在 v1 的基础上做了一轮优化（含整理文档），同样由 Claude Fable 5.2 完成。**v2 没有在 OJ 上提交过，下表都是本地数据**；是否提交、交哪个版本由用户决定。过程记录在 [issue #1](https://github.com/Shuang-su/SZTU-2026-data-structure-final-homework/issues/1)，整理稿见 [docs/v2开发记录.md](docs/v2开发记录.md)。这一阶段的 token 和费用没有统计。
+
+| | v1（OJ 89 分） | v2 不预热 | v2 |
+| :--- | ---: | ---: | ---: |
+| 文件 | `submit_v1.cpp` | `submit_nowarm.cpp` | `submit.cpp` |
+| 165 组本地场景总利润（相对 v1） | — | +4.2% | +23.6% |
+| 比 v1 好 / 差的场景数 | — | 144 / 21 | 165 / 0 |
+| 利润低于基准程序的场景数 | 27 | 11 | 0 |
+| 对账错误、非法指令（173 组） | 0 | 0 | 0 |
+| 最大规模 CPU（本机回放，a05） | 0.302 s | — | 0.380 s |
+
+三处改动：
+
+1. **同一 tick 内 `RUN` → `KILL` → `RUN`**（+17.5%）。题面规定镜像层在 `RUN` 时就进缓存，被终止的作业"已拉取的层留在缓存中"，运行费按 c·p·(r−s) 计。所以先启动、立刻终止、再启动，第二次启动的拉取时间为 0，第一次的运行费也为 0。官方本地评测程序判为合法。**这是利用规则，不是常规调度手段**；不想用时交 `submit_nowarm.cpp`。
+2. **终点的处理**（+4.3%）。原来预计完成时间一超过 T 就整条放弃，改为按 5 个完工时间情景分别判断并留 30 tick 的容差；排队延迟不再计入完工时间预测。
+3. **机架排序计入仓库拉取费**，候选机架从 6 个增加到 12 个（合计约 +0.9%，接近噪声）。
+
+没达到的一项：v2 的 CPU 用时比 v1 高约 20%–25%（开工的工作流更多）。按 v1 在 OJ 的 444 ms 推算约 530–560 ms，没有在 OJ 上验证。
+
 ## 文件
 
 开发思路、阶段耗时、失败与弯路见 [docs/开发记录.md](docs/开发记录.md)。
 
 | 文件 | 用途 |
 | :--- | :--- |
-| `submit.cpp` | **提交用**：14905 字节（限制 16384），ASCII、LF，保留了变量名 |
-| `submit_min.cpp` | 备用提交版：11196 字节，标识符全部缩短；逻辑与上面完全相同 |
-| `main.cpp` | 阅读版：带注释、不含调试代码（29 KB，超限，不能直接交） |
+| `submit.cpp` | **v2 提交用**：15687 字节（限制 16384），ASCII、LF，保留了变量名 |
+| `submit_nowarm.cpp` | v2 关闭预热的版本：15687 字节，与上面只差一个参数（`PW`） |
+| `submit_v1.cpp` | v1，即在 OJ 得 89 分的那份文件：14905 字节 |
+| `submit_min.cpp` | v2 备用提交版：11835 字节，标识符全部缩短；逻辑与 `submit.cpp` 完全相同 |
+| `main.cpp` | v2 阅读版：带注释、不含调试代码（31 KB，超限，不能直接交） |
 | `sol.cpp` | 开发版：阅读版 + `#ifdef DBG` 诊断输出；其余三个文件都由它生成 |
 | `minify.py` | 生成脚本：`python3 minify.py sol.cpp submit.cpp --names`（保留变量名）、不带参数（最小）、`--clean`（阅读版） |
 | `run.py` / `tune.py` / `gen.py` | 本地批量评测、参数对比、随机场景生成 |
-| `cases/` | 测试场景参数；`w/` 为中间结果 |
+| `ev.py` / `fate.py` / `fate2.py` / `brk.py` | v2 用的对比和诊断脚本，说明见 [docs/v2开发记录.md](docs/v2开发记录.md) 第 7 节 |
+| `cases/` | 测试场景参数（`d00–d39` 为 v2 新增的检验集）；`w/` 为中间结果 |
 
-四个 `.cpp` 是同一个程序：在录制的评测输入上逐字节比对过输出，完全一致。
+`submit.cpp`、`submit_min.cpp`、`main.cpp`、`sol.cpp` 是同一个程序：173 组场景的利润逐组相同。
 
 ## 编译与本地评测
 
@@ -68,10 +94,11 @@ python3 run.py bin/submit cases/p1.in -v        # 调用官方 tpj 评测一组
    （后继作业将来汇集输入要付的代价）；在最好的几个机架里逐台机器计价（镜像拉取、等待时间）。
    每台机器维护一条预计释放时间线，允许作业"预约"一台正忙但更合适的机器。
 5. **超时保险**：按 `clock()` 监控 CPU 时间，落后于预算时逐级降级（先停周期性重估，再隔 tick 调度）。
+6. **v2 新增**：同 tick 预热缓存；按情景判断是否来得及在 T 之前完成；机架排序计入仓库拉取费。
 
 ## 本地测试结果
 
-逐场景数据见 [results/submit_results.csv](results/submit_results.csv)（只含本程序自己的结果）。
+v2 的逐场景数据见 [results/v2_results.csv](results/v2_results.csv)，汇总在上面的"v2"一节。以下是 v1 的结果，逐场景数据见 [results/v1_results.csv](results/v1_results.csv)（只含本程序自己的结果）。
 
 基准是 GitHub 上一份 OJ 实得 81 分的公开程序（只当作利润标尺，没有参考其策略和代码）。
 
@@ -86,7 +113,7 @@ python3 run.py bin/submit cases/p1.in -v        # 调用官方 tpj 评测一组
 
 ## 需要知道的事
 
-- OJ 实际得分 **89 分**（用户提交，见上表）。OJ 的阈值不公开，上面的利润比只是相对基准的本地估计，不能换算成 OJ 得分。
+- OJ 实际得分 **89 分**是 v1 的（用户提交，见上表）；v2 没有提交过。OJ 的阈值不公开，上面的利润比只是相对基准的本地估计，不能换算成 OJ 得分。
 - 只在 Apple clang（`-std=c++11`）下编译过，没有用 GCC 实测。
 - 利润对参数的微小变化有 ±1% 左右的随机波动，表中数字的最后一位不要当真。
 - 课程要求如实说明 AI 使用情况：本程序完全由 AI 助手编写并调参。
@@ -95,4 +122,4 @@ python3 run.py bin/submit cases/p1.in -v        # 调用官方 tpj 评测一组
 
 1. `kit/` 是课程提供的官方评测包（`1846_samples.zip` 的内容，含 `tpj_win.exe`），原样放在仓库里。macOS 用 CrossOver 运行，`run.py` 里的 `WINE` 路径按需修改。
 2. `inc/bits/stdc++.h` 只是给 macOS clang 用的头文件垫片；Linux 上用 `g++` 时可忽略 `-Iinc`。
-3. `python3 gen.py 40 cases/c 9000` 可重新生成场景；`python3 tune.py bin/sol "cases/[abpc]*.in" "KILLK=1"` 做参数对比（需要先用 `-DDBG` 编译出 `bin/sol`，并自备基准结果 `w/ref.json`）。
+3. `python3 gen.py 40 cases/c 9000`、`python3 gen.py 40 cases/d 12000` 可重新生成场景；`python3 tune.py bin/sol "cases/[abpc]*.in" "KILLK=1"` 做参数对比（需要先用 `-DDBG` 编译出 `bin/sol`，并自备基准结果 `w/ref.json`）。

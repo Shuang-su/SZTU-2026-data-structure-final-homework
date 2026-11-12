@@ -77,7 +77,7 @@ unsigned using void while define include std main
 vector pair string map set first second size begin end clear insert erase push_back pop_back back
 front resize assign data empty sort lower_bound upper_bound make_pair max min swap abs to_string
 fwrite fflush stdout stdin read memset memcpy clock CLOCKS_PER_SEC log exp sqrt pow floor ceil
-reserve find count fill reverse unique atoll atoi array unordered_map
+reserve find count fill reverse unique atoll atoi array unordered_map partial_sort
 """.split())
 
 toks = []
