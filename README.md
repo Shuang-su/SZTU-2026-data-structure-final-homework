@@ -58,8 +58,8 @@ python3 run.py bin/submit cases/p1.in -v        # 调用官方 tpj 评测一组
 
 ## 复现本地评测
 
-仓库不含官方评测包和任何他人程序。需要自己准备：
+仓库不含任何他人的程序。
 
-1. 把课程提供的 `1846_samples.zip` 解压到 `kit/`（需要 `kit/tpj_win.exe`；macOS 用 CrossOver，`run.py` 里的 `WINE` 路径按需修改）。
+1. `kit/` 是课程提供的官方评测包（`1846_samples.zip` 的内容，含 `tpj_win.exe`），原样放在仓库里，版权归课程方。macOS 用 CrossOver 运行，`run.py` 里的 `WINE` 路径按需修改。
 2. `inc/bits/stdc++.h` 只是给 macOS clang 用的头文件垫片；Linux 上用 `g++` 时可忽略 `-Iinc`。
 3. `python3 gen.py 40 cases/c 9000` 可重新生成场景；`python3 tune.py bin/sol "cases/[abpc]*.in" "KILLK=1"` 做参数对比（需要先用 `-DDBG` 编译出 `bin/sol`，并自备基准结果 `w/ref.json`）。
