@@ -4,7 +4,7 @@
 
 ## v2（`submit.cpp`，OJ 96 分）
 
-OJ 得分是用户 2026-11-14 00:24:03 提交的结果；提交的是否就是 `submit.cpp` 待用户确认，见 [../docs/v2开发记录.md](../docs/v2开发记录.md) 第 13 节。下面是本地数据。
+OJ 得分是用户 2026-11-14 00:24:03 提交的结果；用户确认提交的就是 `submit.cpp`，详见 [../docs/v2开发记录.md](../docs/v2开发记录.md) 第 13 节。下面是本地数据。
 
 逐场景数据见 [v2_results.csv](v2_results.csv)，同一张表里也列出了 v1（`submit_v1.cpp`）和 v2 不预热版（`submit_nowarm.cpp`）的利润。
 
